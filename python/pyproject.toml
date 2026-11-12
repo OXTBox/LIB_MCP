@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lib-mcp"
+version = "0.1.0"
+description = "Drive LiveCode 9.6.3 from tools and AI models: dev server client, MCP server, compile checks"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+lcmcp = "lib_mcp.cli:main"
+lcmcp-server = "lib_mcp.mcp_server:main"
+lcmcp-ask = "lib_mcp.ask_local:main"
+
+[tool.setuptools]
+packages = ["lib_mcp"]
+
+[tool.setuptools.package-data]
+lib_mcp = ["livecode_primer.md"]

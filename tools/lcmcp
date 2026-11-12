@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# lcmcp - run the LIB_MCP command line without installing it (see python/lib_mcp/cli.py)
+HERE="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+PYTHONPATH="$HERE/python${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m lib_mcp.cli "$@"

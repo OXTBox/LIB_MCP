@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.egg-info/
+eval_results.json
+# standalone builds: rebuild from standalone/xt3d_MCP.livecode
+standalone/*/
+*:Zone.Identifier
