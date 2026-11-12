@@ -286,9 +286,11 @@ function DevServer.Run pCode, pInServer, pTarget
       put the result into tResult
       if tResult begins with "ERROR:" then return tResult
    end if
-   if tResult is empty then return msg
-   if msg is empty then return "result:" && tResult
-   return msg & return & "result:" && tResult
+   -- what was put into the message box is the answer; the result only when there is none
+   -- (after a function call the result often still holds that function's return value)
+   if msg is not empty then return msg
+   if tResult is empty then return empty
+   return "result:" && tResult
 end DevServer.Run
 
 -- Compile a script without running it: set it as the script of a hidden scratch stack.
