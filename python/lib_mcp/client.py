@@ -97,8 +97,18 @@ class Client:
     @classmethod
     def standalone(cls, start=True, wait=30):
         c = cls(STANDALONE_PORT)
-        if c.running() or not start:
+        if not start:
             return c
+        if c.running():
+            try:
+                c.request('GET', '/ping', timeout=5)
+                return c
+            except NotRunning:
+                # a token left behind by a standalone that was closed: start a fresh one
+                try:
+                    os.remove(c.token_file)
+                except OSError:
+                    pass
         exe = cls.standalone_exe()
         if not exe:
             raise NotRunning('No standalone build in %s/standalone' % LIB_DIR)

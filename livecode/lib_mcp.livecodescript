@@ -305,7 +305,12 @@ function DevServer.Compile pScript
    end if
    set the script of stack "xtCompileCheck" to pScript
    put the result into tErr
+   -- empty the script before deleting: deleting sends closeStack, and the checked script's
+   -- own closeStack handler would run (a launcher's "quit" ended the engine once)
+   set the script of stack "xtCompileCheck" to empty
+   lock messages
    delete stack "xtCompileCheck"   -- so the IDE never asks to save it
+   unlock messages
    if tErr is empty then return "COMPILES OK"
    return "COMPILE ERROR" & return & DevServer.ErrorText(tErr, true)
 end DevServer.Compile

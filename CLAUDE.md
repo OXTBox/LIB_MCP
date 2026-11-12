@@ -18,3 +18,4 @@ LiveCode 9.6.3 on Windows; this repo lives in WSL and is reached from Windows as
   (`tExt`, `tHere`); chunk order (`word of char` is a compile error); `create` without an
   explicit stack puts the control into whatever stack is the defaultStack.
 - `repeat with x = a to b step s` (s not 1) runs one extra pass past `b` unless the steps land on `b` exactly: `1 to 8 step 4` gives 1, 5, 9; `1 to 10 step 4` gives 1, 5, 9, 13; `10 down to 1 step -4` gives 10, 6, 2, -2. In effect it continues while x < b + s. Use `repeat while` when the end matters.
+- Deleting a stack sends it closeStack: anything that loads foreign scripts into a scratch stack must empty its script and lock messages before deleting it (a compiled launcher once quit the engine this way).
