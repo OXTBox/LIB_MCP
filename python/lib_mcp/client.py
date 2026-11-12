@@ -101,7 +101,7 @@ class Client:
             return c
         if c.running():
             try:
-                c.request('GET', '/ping', timeout=5)
+                c.request('GET', '/ping', timeout=15)
                 return c
             except NotRunning:
                 # a token left behind by a standalone that was closed: start a fresh one
@@ -112,6 +112,9 @@ class Client:
         exe = cls.standalone_exe()
         if not exe:
             raise NotRunning('No standalone build in %s/standalone' % LIB_DIR)
+        # never two at once: a slow copy still holding the port would answer with an old token
+        subprocess.run(['taskkill.exe', '/IM', os.path.basename(exe), '/F'], capture_output=True)
+        time.sleep(1)
         subprocess.run(['cmd.exe', '/c', 'start', '', local_to_win(exe)], cwd='/mnt/c' if os.path.isdir('/mnt/c') else None,
                        capture_output=True)
         end = time.time() + wait
