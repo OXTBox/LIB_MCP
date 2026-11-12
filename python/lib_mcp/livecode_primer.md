@@ -75,6 +75,8 @@ dispatch "doThing" to card 2 with tArg
 - Chunks nest from small inside big: char 3 of word 2 of line 1 is fine, but taking a
   bigger chunk out of a smaller one is "bad chunk order": WRONG word 1 of char 1 to 5 of tX.
   Put the smaller chunk into a variable first, then take words from that.
+- repeat with x = 1 to 8 step 4 runs 1, 5 AND 9 (one extra pass past the end unless the
+  steps land on it exactly). Use repeat while x <= tEnd when the end matters.
 - Items, words and lines are already numbers when they look like numbers: add tItem to tTotal
   (WRONG: the number of tItem; "the number of" only counts chunks: the number of items of tList).
 - A handler that uses a global must declare it first:  global gScore  (at the top of the

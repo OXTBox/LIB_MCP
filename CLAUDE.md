@@ -17,3 +17,4 @@ LiveCode 9.6.3 on Windows; this repo lives in WSL and is reached from Windows as
 - Pitfalls met so far: one-line `if` before `else`; variable names that spell keywords
   (`tExt`, `tHere`); chunk order (`word of char` is a compile error); `create` without an
   explicit stack puts the control into whatever stack is the defaultStack.
+- `repeat with x = a to b step s` (s not 1) runs one extra pass past `b` unless the steps land on `b` exactly: `1 to 8 step 4` gives 1, 5, 9; `1 to 10 step 4` gives 1, 5, 9, 13; `10 down to 1 step -4` gives 10, 6, 2, -2. In effect it continues while x < b + s. Use `repeat while` when the end matters.
