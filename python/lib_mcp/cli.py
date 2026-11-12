@@ -5,6 +5,7 @@
     lcmcp eval '<expression>'
     lcmcp compile FILE...            compile-check scripts: COMPILES OK or errors with file line numbers
     lcmcp errors [N]                 last N logged LiveCode errors (reads the log; no server needed)
+    lcmcp lint FILE...               stray empty puts and other bug habits (no server needed)
     lcmcp snap [WINDOWS_PATH]        PNG of the target stack (default C:/LIB_MCP/snap.png)
     lcmcp reload [WINDOWS_PATH]      close and reopen the target stack from its file
 
@@ -36,11 +37,14 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog='lcmcp', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--standalone', action='store_true')
     ap.add_argument('--port', type=int)
-    ap.add_argument('command', choices=['ping', 'run', 'eval', 'compile', 'errors', 'snap', 'reload'])
+    ap.add_argument('command', choices=['ping', 'run', 'eval', 'compile', 'errors', 'lint', 'snap', 'reload'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--server', action='store_true', help='run/eval in the library itself, not the target stack')
     a = ap.parse_args(argv)
 
+    if a.command == 'lint':
+        from lib_mcp import lint
+        return lint.main(a.args)
     if a.command == 'errors':
         print(recent_errors(int(a.args[0]) if a.args else 5), end='')
         return 0

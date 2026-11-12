@@ -4,8 +4,9 @@ Read `README.md`. The owner (wrote iGame3D, fluent in LiveCode, rusty in C/Pytho
 LiveCode 9.6.3 on Windows; this repo lives in WSL and is reached from Windows as
 `\\wsl$\Ubuntu\home\igame3d\projects\LIB_MCP`.
 
-- Use `tools/lcmcp compile <file>` on every LiveCode script before giving it to the owner,
-  in any of the family's projects. It starts the standalone by itself.
+- Use `tools/lcmcp compile <file>` and `tools/lcmcp lint <file>` on every LiveCode script before
+  giving it to the owner, in any of the family's projects. compile starts the standalone by
+  itself; lint needs nothing (empty puts, one-line if before else, stepped repeat, keyword names).
 - LiveCode errors: `tools/lcmcp errors`. Never ask the owner to retype an error.
 - Code sent with `run` goes through `do` inside a server handler: do not declare locals
   that handler uses (`tErr`, `tResult`); prefer unusual names.
