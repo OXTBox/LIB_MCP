@@ -330,12 +330,24 @@ command DevServer.DoReload
    put sDev["reload"] into tPath
    put sDev["target"] into tName
    if there is a stack tName then
+      -- its queued messages (frame timers) would keep the old copy alive: cancel them
+      DevServer.CancelPending tName
       -- closeStack stops the bench's view; delete removes the old script from memory
       close stack tName
       if there is a stack tName then delete stack tName
    end if
    go stack tPath
 end DevServer.DoReload
+
+-- cancel every pending message addressed to stack pName or one of its objects
+command DevServer.CancelPending pName
+   local tLine, tLong
+   if there is not a stack pName then exit DevServer.CancelPending
+   put the long name of stack pName into tLong
+   repeat for each line tLine in the pendingMessages
+      if item 4 to -1 of tLine contains tLong then cancel item 1 of tLine
+   end repeat
+end DevServer.CancelPending
 
 function DevServer.Snap pTarget, pFile
    local tErr
