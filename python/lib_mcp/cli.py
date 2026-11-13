@@ -8,10 +8,12 @@
     lcmcp lint FILE...               stray empty puts and other bug habits (no server needed)
     lcmcp snap [WINDOWS_PATH]        PNG of the target stack (default C:/LIB_MCP/snap.png)
     lcmcp reload [WINDOWS_PATH]      close and reopen the target stack from its file
+    lcmcp harvest STACKFILE [OUT]    stack file -> XTJSON folder (default ~/projects/XTJSON/<file name>),
+                                     using LIB_XTJSON's harvester; the stack's own handlers do not run
 
     --standalone   use the standalone (port 8767; started when needed) instead of the IDE (8766)
     --port N       any other port
-compile uses the standalone and falls back to the IDE.
+compile and harvest use the standalone and fall back to the IDE.
 """
 import argparse, sys
 
@@ -33,11 +35,24 @@ def pick(a, prefer_standalone=False):
     return Client(IDE_PORT)
 
 
+def load_xtjson():
+    """LIB_XTJSON's python/xtjson_harvest.py: sibling folder, or $LIB_XTJSON_DIR"""
+    import os
+    lib = os.environ.get('LIB_XTJSON_DIR') or os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), '..', 'LIB_XTJSON')
+    path = os.path.join(lib, 'python')
+    if not os.path.isfile(os.path.join(path, 'xtjson_harvest.py')):
+        raise SystemExit('lcmcp harvest needs LIB_XTJSON beside LIB_MCP (or set LIB_XTJSON_DIR); not found at ' + lib)
+    sys.path.insert(0, path)
+    import xtjson_harvest
+    return xtjson_harvest
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog='lcmcp', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--standalone', action='store_true')
     ap.add_argument('--port', type=int)
-    ap.add_argument('command', choices=['ping', 'run', 'eval', 'compile', 'errors', 'lint', 'snap', 'reload'])
+    ap.add_argument('command', choices=['ping', 'run', 'eval', 'compile', 'errors', 'lint', 'snap', 'reload', 'harvest'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--server', action='store_true', help='run/eval in the library itself, not the target stack')
     a = ap.parse_args(argv)
@@ -49,6 +64,14 @@ def main(argv=None):
         print(recent_errors(int(a.args[0]) if a.args else 5), end='')
         return 0
     try:
+        if a.command == 'harvest':
+            if not a.args:
+                print('usage: lcmcp harvest STACKFILE [OUTFOLDER]', file=sys.stderr)
+                return 2
+            xh = load_xtjson()
+            ok, out = xh.harvest(a.args[0], a.args[1] if len(a.args) > 1 else None, client=pick(a, prefer_standalone=True))
+            print(out)
+            return 0 if ok else 1
         if a.command == 'compile':
             c, bad = pick(a, prefer_standalone=True), 0
             for f in a.args:

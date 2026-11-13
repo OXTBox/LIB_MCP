@@ -34,6 +34,7 @@ tools/lcmcp --standalone ping        # the standalone (8767), started if needed
 tools/lcmcp compile some.livecodescript
 tools/lcmcp run 'put the version'
 tools/lcmcp errors 3
+tools/lcmcp harvest Stack.livecode   # stack file -> XTJSON folder (needs LIB_XTJSON beside this)
 ```
 
 Or install the package: `pip install -e python/` gives `lcmcp`, `lcmcp-server`, `lcmcp-ask`.
@@ -41,7 +42,9 @@ Or install the package: `pip install -e python/` gives `lcmcp`, `lcmcp-server`, 
 ## MCP (LM Studio, Claude Desktop)
 
 `python/lib_mcp/mcp_server.py`, with tool packs from other libraries via `--tools pack.py`.
-See the header of `mcp_server.py` for the LM Studio `mcp.json` entry.
+See the header of `mcp_server.py` for the LM Studio `mcp.json` entry. Packs so far:
+`xt3D_Raylib_Livecode_Bridge/mcp/xt3d_tools.py` and `LIB_XTJSON/mcp/xtjson_tools.py`
+(harvest a stack, then ask about its handlers, globals, custom properties and scripts).
 
 Built-in tools: `livecode_primer`, `livecode_status`, `livecode_run`, `livecode_eval`,
 `livecode_compile`, `livecode_errors`, `livecode_snapshot`. Small local models do not know
