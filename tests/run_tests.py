@@ -39,6 +39,19 @@ def main():
     check('keyword-name: tText reads as text', 'keyword-name' in kinds('on m\n  put 1 into tExt\nend m\n'))
     check('-- lint-ok silences a line', kinds('on m\n  put x -- lint-ok\nend m\n') == [])
     check('/mnt/c path to C:', local_to_win('/mnt/c/LIB_MCP/x.txt') == 'C:/LIB_MCP/x.txt', local_to_win('/mnt/c/LIB_MCP/x.txt'))
+    # headless compile (the LiveCode server in WSL, no window), when the server is installed
+    from lib_mcp import compile_headless as ch
+    import tempfile
+    if os.path.exists(ch.SERVER):
+        with tempfile.TemporaryDirectory() as d:
+            good, bad = os.path.join(d, 'good.livecodescript'), os.path.join(d, 'bad.livecodescript')
+            open(good, 'w').write('script "good"\non mouseUp\n   put 1 into x\nend mouseUp\n')
+            open(bad, 'w').write('on mouseUp\n   put 1 into x\n   put 2 intoo y\nend mouseUp\n')
+            res = dict(ch.check([good, bad]))
+            check('headless compile: a good script compiles (the "script" header line skipped)', res[good] is None, res[good])
+            check('headless compile: an error is found on its line', res[bad] and res[bad][0] == 3, res[bad])
+    else:
+        print('skip  headless compile (no LiveCode server in LIB_BIN)')
     return done()
 
 

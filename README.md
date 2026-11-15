@@ -71,3 +71,10 @@ but it is for development: never put it inside an application you give to others
 | `LIB_TRACE` | bitmap outline tracing, grid to 3D map |
 | `Vibecode3D` | the vector 3D engine (contains LIB_LLM) |
 | `xtalk_py` | Python runtime for xTalk (planned) |
+
+## Compile without a window (2026-11-15)
+`python3 -I python/lib_mcp/compile_headless.py FILE...` compile-checks scripts with the LiveCode
+9.6.3 **server** in WSL (`LIB_BIN/livecode-server/9.6.3-linux-x64`): no IDE, no standalone,
+nothing on the owner's screen. COMPILES / ERRORS with the line and the word. It checks syntax
+only; anything that needs the script to run still needs the IDE or the standalone.
+
