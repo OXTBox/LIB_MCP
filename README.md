@@ -78,3 +78,9 @@ but it is for development: never put it inside an application you give to others
 nothing on the owner's screen. COMPILES / ERRORS with the line and the word. It checks syntax
 only; anything that needs the script to run still needs the IDE or the standalone.
 
+
+## Licence
+
+GPL-3.0 (see `LICENSE`), because the xTalk work here is built on the GPL-licensed LiveCode Community 9 engine. Copyright (c) 2026 xAction.
+
+The Python files (`.py`) and other material that is not xTalk are also offered under the MIT licence, Copyright (c) 2026 xAction: you may use them under either licence.
