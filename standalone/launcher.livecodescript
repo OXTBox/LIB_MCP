@@ -3,13 +3,13 @@
 --
 -- At start it walks up from its own .exe until it finds livecode/lib_mcp.livecodescript
 -- (the build lands in standalone/<StackName>/Windows x86-64/, so that is LIB_MCP's own
--- folder), loads the server from there and starts it on port 8767. Changes to the server
+-- folder), loads the server from there and starts it on port 8767 (copy 2: 8768, see LibMCP.PortFromName). Changes to the server
 -- file therefore need no rebuild; only changes to this script do.
 -- Port 8767, so it runs beside the IDE's server (8766). Clients start it as needed.
 -- Opened in the IDE it does nothing: there, a stack starts the server itself.
 
 on openStack
-   local tServer, tResult
+   local tServer, tResult, tPort
    -- the server library also sees openStack; only act for this stack
    if the short name of the owner of the target is not the short name of me then pass openStack
    if the environment is "development" then exit openStack
@@ -18,8 +18,15 @@ on openStack
       answer "LIB_MCP: could not find livecode/lib_mcp.livecodescript above" && the effective filename of me
       exit openStack
    end if
+   -- ABSOLUTE RULE (owner, 21 Nov): at most two copies, ports 8767 and 8768, chosen by the exe name:
+   -- xt3d_MCP.exe = 8767, xt3d_MCP_1.exe = 8768. Any other name is refused; nothing else ever listens.
+   put LibMCP.PortFromName() into tPort
+   if tPort is empty then
+      answer "LIB_MCP: this exe must be named xt3d_MCP.exe or xt3d_MCP_1.exe (at most two copies)." && the effective filename of me
+      quit
+   end if
    start using stack tServer
-   DevServer.Start 8767
+   DevServer.Start tPort
    put the result into tResult
    set the title of me to "LIB_MCP server"
    if there is not a field "status" then create field "status"
@@ -34,6 +41,17 @@ on openStack
       exit openStack
    end if
 end openStack
+
+-- 8767 / 8768 from this exe's own file name; empty for any other name
+function LibMCP.PortFromName
+   local tName
+   put the effective filename of me into tName
+   set the itemDel to "/"
+   put item -1 of tName into tName
+   if tName is "xt3d_MCP.exe" then return 8767
+   if tName is "xt3d_MCP_1.exe" then return 8768
+   return empty
+end LibMCP.PortFromName
 
 -- walk up from this standalone's file to the folder that holds livecode/lib_mcp.livecodescript
 function LibMCP.FindServer

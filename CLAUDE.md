@@ -11,6 +11,7 @@ LiveCode 9.6.3 on Windows; this repo lives in WSL and is reached from Windows as
 - Code sent with `run` goes through `do` inside a server handler: do not declare locals
   that handler uses (`tErr`, `tResult`); prefer unusual names.
 - Only one listener per engine: the IDE uses 8766 (a stack starts it), the standalone 8767.
+- Standalone copies: ABSOLUTE limit of two (8767 xt3d_MCP.exe, 8768 xt3d_MCP_1.exe). Client.standalone(slot=N) / env LIBMCP_SLOT; client counts running copies and refuses a third; the launcher refuses any other exe name. Needs the standalone rebuilt with the new launcher script (owner).
 - The server is a script-only stack. If the owner saves it from the IDE, LiveCode writes
   its in-memory copy over the file (and adds a BOM). Check against git if the file changes.
 - When a local model makes a new kind of LiveCode mistake, add it to

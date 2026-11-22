@@ -28,7 +28,7 @@ def pick(a, prefer_standalone=False):
         return Client(a.port)
     if a.standalone or prefer_standalone:
         try:
-            return Client.standalone()
+            return Client.standalone(slot=None)
         except NotRunning:
             if a.standalone:
                 raise
