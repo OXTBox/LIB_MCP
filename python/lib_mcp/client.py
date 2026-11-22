@@ -150,8 +150,11 @@ class Client:
                              % (name, len(others), ', '.join(others)))
         subprocess.run(['taskkill.exe', '/IM', name, '/F'], capture_output=True)
         time.sleep(1)
-        subprocess.run(['cmd.exe', '/c', 'start', '', local_to_win(exe)], cwd='/mnt/c' if os.path.isdir('/mnt/c') else None,
-                       capture_output=True)
+        # fire and forget: `start` does not return while the started copy holds the console, and captured
+        # pipes would be inherited too. The token file (waited for below) says the copy is up.
+        subprocess.Popen(['cmd.exe', '/c', 'start', '', local_to_win(exe)], cwd='/mnt/c' if os.path.isdir('/mnt/c') else None,
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
         end = time.time() + wait
         while time.time() < end:
             if c.running():
