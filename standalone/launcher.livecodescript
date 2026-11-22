@@ -10,7 +10,7 @@
 
 on openStack
    local tServer, tResult, tPort
-   -- the server library also sees openStack; only act for this stack
+   -- the server library also sees openStack; only act for this stack -- i saved impulsively 11212026
    if the short name of the owner of the target is not the short name of me then pass openStack
    if the environment is "development" then exit openStack
    put LibMCP.FindServer() into tServer

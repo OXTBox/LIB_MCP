@@ -95,7 +95,8 @@ class Client:
     # ---------------------------------------------------------------- standalone
     @staticmethod
     def standalone_exe():
-        hits = sorted(glob.glob(os.path.join(LIB_DIR, 'standalone', '*', 'Windows x86-64', '*.exe')))
+        hits = [h for h in [os.path.join(LIB_DIR, 'standalone', 'xt3d_MCP.exe')] if os.path.isfile(h)] or \
+            sorted(glob.glob(os.path.join(LIB_DIR, 'standalone', '*', 'Windows x86-64', 'xt3d_MCP.exe')))
         return hits[0] if hits else None
 
     @staticmethod
