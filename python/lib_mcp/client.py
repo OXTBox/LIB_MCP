@@ -123,6 +123,7 @@ class Client:
     def standalone(cls, start=True, wait=30, slot=0):
         if slot is None:
             slot = int(os.environ.get('LIBMCP_SLOT', '0'))
+        wait = int(os.environ.get('LIBMCP_WAIT', wait))   # a slow machine needs longer than 30 s to start a copy
         if not 0 <= slot < MAX_COPIES:
             raise NotRunning('Standalone slot %d refused: only slots 0..%d exist (at most %d copies).'
                              % (slot, MAX_COPIES - 1, MAX_COPIES))
